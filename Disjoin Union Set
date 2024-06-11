@@ -1,0 +1,53 @@
+class DSU{
+	
+	public:
+	vector<int> rank,size,parent,mini,maxi;
+
+	DSU(int n)
+	{
+		rank.resize(n+1,1);
+		size.resize(n+1,1);
+		parent.resize(n+1);
+		mini.resize(n+1);
+		maxi.resize(n+1);
+
+		for(int i=0;i<=n;i++)
+		{
+			parent[i]=i;
+			maxi[i]=i;
+			mini[i]=i;
+		}
+	}
+
+	void join(int u,int v)
+	{
+		int leaderA=get(u);
+		int leaderB=get(v);
+
+		if(leaderA==leaderB) return;
+
+		if(rank[leaderA]==rank[leaderB]) rank[leaderA]++;
+
+		if(rank[leaderA]>rank[leaderB]){
+			parent[leaderB]=leaderA;
+			size[leaderA]+=size[leaderB];
+			mini[leaderA]=min(mini[leaderA],mini[leaderB]);
+			maxi[leaderA]=max(maxi[leaderA],maxi[leaderB]);
+		}
+		else
+		{
+			parent[leaderA]=leaderB;
+			size[leaderB]+=size[leaderA];
+			mini[leaderB]=min(mini[leaderA],mini[leaderB]);
+			maxi[leaderB]=max(maxi[leaderA],maxi[leaderB]);
+		}
+	}
+
+	int get(int u)
+	{
+		if(parent[u]==u) return u;
+
+		return parent[u]=get(parent[u]);
+	}
+
+};
