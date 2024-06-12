@@ -1,0 +1,21 @@
+ll cost=0;
+
+	DSU d(n);
+
+	for(auto &it:st)
+	{
+		int u=it.ss.ff;
+		int v=it.ss.ss;
+		int w=it.ff;
+
+		int leaderA=d.get(u);
+		int leaderB=d.get(v);
+
+		if(leaderA==leaderB)
+		continue;
+
+		cost+=w;
+		d.join(u,v);
+	}
+
+	cout<<cost<<endl;
