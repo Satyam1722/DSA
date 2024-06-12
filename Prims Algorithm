@@ -1,0 +1,26 @@
+vector<ll> mincost(n+1,INT_MAX),visited(n+1,0);
+	ll totalcost=0;
+
+	set<pair<ll,ll>> st;
+
+	mincost[1]=0;
+	visited[1]=1;
+	st.insert({0,1});
+
+	while(!st.empty())
+	{
+		auto [cost,u] = *st.begin();
+		st.erase(st.begin());
+		totalcost+=cost;
+		visited[u]=1;
+
+		for(auto &[v,wt] : adj[u])
+		{
+			if(!visited[v] && wt<mincost[v])
+			{
+				st.erase({mincost[v],v});
+				mincost[v]=wt;
+				st.insert({mincost[v],v});
+			}
+		}
+	}
