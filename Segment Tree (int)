@@ -1,11 +1,11 @@
 class SGTree {
-public: vector<int> seg;
+public: vector<ll> seg;
 public:
 	SGTree(int n) {
 		seg.resize(4 * n + 1);
 	}
  
-	void build(int ind, int low, int high, int arr[]) {
+	void build(int ind, int low, int high,vector<ll> &arr) {
 		if (low == high) {
 			seg[ind] = arr[low];
 			return;
@@ -27,8 +27,8 @@ public:
 		if (low >= l && high <= r) return seg[ind];
  
 		int mid = (low + high) >> 1;
-		int left = query(2 * ind + 1, low, mid, l, r);
-		int right = query(2 * ind + 2, mid + 1, high, l, r);
+		ll left = query(2 * ind + 1, low, mid, l, r);
+		ll right = query(2 * ind + 2, mid + 1, high, l, r);
 		return left + right;
 	}
 	void update(int ind, int low, int high, int i, int val) {
