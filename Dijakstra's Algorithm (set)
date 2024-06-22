@@ -1,3 +1,42 @@
+//For Adjacency List
+
+void helper(ll sr,vector<vector<pair<ll,ll>>> &adj,vll &dist)
+{
+	dist[sr]=0;
+	set<pair<ll,ll>> st;
+	st.insert({dist[sr],sr});
+
+	while(!st.empty())
+	{
+		pair<ll,ll> node=*st.begin();
+		st.erase(st.begin());
+
+		ll d=node.ff;
+		ll u=node.ss;
+
+		for(auto it:adj[u])
+		{
+			ll v=it.ff;
+			ll w=it.ss;
+
+			if(d+w<dist[v])
+			{
+				st.erase({dist[v],v});
+				dist[v]=d+w;
+				st.insert({dist[v],v});
+			}
+		}
+	}
+
+}
+
+
+
+
+
+
+//For Adjacency Matrix
+
 void helper(ll u,vector<vll> &adj,vll &dist)
 {
 	int n=adj.size();
