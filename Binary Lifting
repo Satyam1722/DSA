@@ -1,0 +1,119 @@
+// To fill the first parent and level of each node
+
+void dfs(int u,int p,vector<vi> &adj,vector<vi> &parent,vi &level)
+{
+	parent[0][u]=p;
+
+	if(p!=-1)
+	{
+		level[u]=level[p]+1;
+	}
+
+	for(auto v:adj[u])
+	{
+		if(v!=p)
+		{
+			dfs(v,u,adj,parent,level);
+		}
+	}
+}
+
+
+// To find the parent of any node ,
+// u->whose parent want to find , 
+// k->which parent want to find (if it return -1 it means it's kth parent doesn't exist
+
+int findParent(int u,int k,vector<vi> &parent,int maxPow)
+{
+	int ans=u;
+	// cout<<ans<<endl;
+
+	for(int i=0;i<maxPow;i++)
+	{
+		if(k&(1<<i))
+		{
+			ans=parent[i][ans];
+			// cout<<ans<<" "<<i<<endl;
+			if(ans==-1)
+			return ans;
+		}
+	}
+
+	return ans;
+}
+
+// Find Lca using binary lifting take logn to find any parent of any node
+
+int lca2(int a,int b,vector<vi> &parent,vi &level,int maxPow)
+{
+	if(level[a]>level[b])
+	{
+		a=findParent(a,level[a]-level[b],parent,maxPow);
+	}
+	else
+	{
+		b=findParent(b,level[b]-level[a],parent,maxPow);
+	}
+
+	if(a==b)
+	return a;
+
+	for(int i=maxPow-1;i>=0;i--)
+	{
+		int u=parent[i][a];
+		int v=parent[i][b];
+
+		if(u==v) continue;
+
+		a=u;
+		b=v;
+	}
+
+	return parent[0][a];
+}
+
+// find parent using binary search it take logn*logn of any node 
+
+int lca(int a,int b,vector<vi> &parent,vi &level,int maxPow)
+{
+	if(level[a]>level[b])
+	{
+		a=findParent(a,level[a]-level[b],parent,maxPow);
+	}
+	else
+	{
+		b=findParent(b,level[b]-level[a],parent,maxPow);
+	}
+
+	if(a==b)
+	return a;
+
+	int low=0;
+	int high=level.size()-1;
+
+	int ans=-1;
+
+	while(low<=high)
+	{
+		int mid=low+(high-low)/2;
+
+		int u=findParent(a,mid,parent,maxPow);
+		int v=findParent(b,mid,parent,maxPow);
+
+		if(u==v)
+		{
+			ans=u;
+			high=mid-1;
+		}
+		else
+		{
+			low=mid+1;
+		}
+
+	}
+
+	return ans;
+}
+
+
+
