@@ -1,0 +1,142 @@
+struct Node{
+	Node* links[2];
+	int count=0;
+
+	bool isContain(int bit)
+	{
+		return links[bit]!=NULL;
+	}
+
+	void put(int bit,Node *node)
+	{
+		links[bit]=node;
+	}
+
+	Node* get(int bit)
+	{
+		return links[bit];
+	}
+
+void setEnd()
+{
+		count++;
+}
+
+void unsetEnd()
+{
+		count--;
+}
+
+int get()
+{
+		return count;
+}
+};
+
+class Trie{
+
+	Node *root;
+	public:
+
+	Trie(){
+		// Write your code here.
+		root=new Node();
+	}
+
+	void insert(int num){
+		// Write your code here.
+		Node *node=root;
+
+		for(int i=31;i>=0;i--)
+		{
+			int bit=(num>>i)&1;
+
+			if(!node->isContain(bit))
+			{
+				node->put(bit,new Node());
+			}
+			node=node->get(bit);
+		}
+		node->setEnd();
+	}
+
+	int maxXor(int num){
+		// Write your code here.
+		Node* node=root;
+		int ans=0;
+
+		for(int i=31;i>=0;i--)
+		{
+			int bit=(num>>i)&1;
+
+			if(node->isContain(1-bit))
+			{
+				ans=ans|(1<<i);
+				node=node->get(1-bit);
+			}
+			else
+			{
+				node=node->get(bit);
+			}
+		}
+
+		return ans;
+	}
+
+	int minXor(int num)
+	{
+		Node *node=root;
+		int ans=0;
+
+		for(int i=31;i>=0;i--)
+		{
+			int bit=(num>>i)&1;
+
+			if(!node->isContain(bit))
+			{
+				ans=ans|(1<<i);
+				node=node->get(1-bit);
+			}
+			else
+			{
+				node=node->get(bit);
+			}
+		}
+
+		return ans;
+	}
+
+
+	void erase(int num){
+		// Write your code here.
+		Node* node=root;
+		stack<pair<Node*,int>> st;
+
+		for(int i=31;i>=0;i--)
+		{
+			int bit=(num>>i)&1;
+			st.push({node,bit});
+			node=node->get(bit);
+		}
+		node->unsetEnd();
+
+		if(node->get()!=0)
+		return;
+
+		while(!st.empty())
+		{
+			auto it=st.top();
+			st.pop();
+
+			Node *parent=it.first;
+			int bit=it.second;
+			Node *child=it.first->get(bit);
+
+			if(child->isContain(1) || child->isContain(0) || child->get()!=0)
+			break;
+
+			it.first->put(bit,NULL);
+			delete child;
+		}
+	}
+};
